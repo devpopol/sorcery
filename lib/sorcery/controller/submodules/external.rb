@@ -115,6 +115,7 @@ module Sorcery
             if user = user_class.load_from_provider(provider_name, @user_hash[:uid].to_s)
               # we found the user.
               # clear the session
+              user.is_external!
               return_to_url = session[:return_to_url]
               reset_sorcery_session
               session[:return_to_url] = return_to_url
@@ -154,6 +155,7 @@ module Sorcery
             attrs = user_attrs(@provider.user_info_mapping, @user_hash)
 
             user = user_class.new(attrs)
+            user.is_external!
             user.send(config.authentications_class.to_s.downcase.pluralize).build(config.provider_uid_attribute_name => @user_hash[:uid], config.provider_attribute_name => provider_name)
 
             session[:incomplete_user] = {
@@ -188,6 +190,7 @@ module Sorcery
 
             user_class.transaction do
               @user = user_class.new()
+              @user.is_external!
               attrs.each do |k,v|
                 @user.send(:"#{k}=", v)
               end
