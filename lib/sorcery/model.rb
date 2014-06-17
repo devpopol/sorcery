@@ -195,7 +195,15 @@ module Sorcery
       # identifies whether this user is regular, i.e. we hold his credentials in our db,
       # or that he is external, and his credentials are saved elsewhere (twitter/facebook etc.).
       def external?
-        send(sorcery_config.crypted_password_attribute_name).nil?
+        !!@is_external #|| send(sorcery_config.crypted_password_attribute_name).nil?
+      end
+
+      def set_external!
+        @is_external = true
+      end
+
+      def set_internal!
+        @is_external = false
       end
 
       protected
