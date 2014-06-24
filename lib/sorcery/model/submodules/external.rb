@@ -43,7 +43,8 @@ module Sorcery
             config = sorcery_config
             authentication = config.authentications_class.find_by_provider_and_uid(provider, uid)
             user = find(authentication.send(config.authentications_user_id_attribute_name)) if authentication
-            user.set_external!
+            user.set_external! if user
+            user
           end
         end
         
